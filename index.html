@@ -553,28 +553,48 @@
             document.getElementById('flipbook-view').style.display = 'block';
             document.getElementById('fullscreen-btn').style.display = 'flex';
 
-            // Reset flipbook container
-            const flipbookElement = document.getElementById('pdfflipbook');
-            flipbookElement.style.display = 'none';
-            flipbookElement.classList.remove('_df_book');
-            flipbookElement.removeAttribute('source');
+            // Show loading
             document.getElementById('pdf-loading').style.display = 'flex';
 
-            // Destroy previous flipbook if exists
-            if (currentFlipbook && typeof currentFlipbook.dispose === 'function') {
-                currentFlipbook.dispose();
+            // Destroy previous flipbook completely
+            const flipbookContainer = document.getElementById('flipbook-container');
+            const oldFlipbook = document.getElementById('pdfflipbook');
+
+            // Remove old flipbook from DFLIP's internal cache
+            if (typeof DFLIP !== 'undefined' && DFLIP.books) {
+                Object.keys(DFLIP.books).forEach(key => {
+                    if (DFLIP.books[key] && typeof DFLIP.books[key].dispose === 'function') {
+                        DFLIP.books[key].dispose();
+                    }
+                    delete DFLIP.books[key];
+                });
             }
+
+            // Remove old element and create fresh one
+            if (oldFlipbook) {
+                oldFlipbook.remove();
+            }
+
+            const newFlipbook = document.createElement('div');
+            newFlipbook.id = 'pdfflipbook';
+            newFlipbook.className = '_df_book';
+            newFlipbook.setAttribute('webgl', 'true');
+            newFlipbook.setAttribute('backgroundcolor', 'transparent');
+            newFlipbook.setAttribute('direction', '2');
+            newFlipbook.setAttribute('pagemode', '2');
+            newFlipbook.setAttribute('singlepagemode', '0');
+            newFlipbook.style.display = 'none';
+            flipbookContainer.appendChild(newFlipbook);
 
             try {
                 const pdfPath = `Aasan-Quran/${para.file}`;
                 const modifiedPdfUrl = await preparePdfWithBlankPage(pdfPath);
 
                 // Set source and initialize
-                flipbookElement.setAttribute('source', modifiedPdfUrl);
-                flipbookElement.classList.add('_df_book');
+                newFlipbook.setAttribute('source', modifiedPdfUrl);
 
                 document.getElementById('pdf-loading').style.display = 'none';
-                flipbookElement.style.display = 'block';
+                newFlipbook.style.display = 'block';
 
                 if (typeof DFLIP !== 'undefined') {
                     DFLIP.parseBooks();
