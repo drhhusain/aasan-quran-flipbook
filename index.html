@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aasan Quran - Al Qalam</title>
+
+    <!-- DearFlip StyleSheets -->
+    <link href="dflip/css/dflip.min.css" rel="stylesheet" type="text/css">
+    <link href="dflip/css/themify-icons.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Nastaliq+Urdu:wght@400..700&family=Scheherazade+New:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Amiri', serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2744 50%, #0d1f3c 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Decorative Pattern Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 15% 85%, rgba(212, 175, 55, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 85% 15%, rgba(212, 175, 55, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.02) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== PARA SELECTOR VIEW ===== */
+        #para-selector {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding: 0 1rem 2rem 1rem;
+        }
+
+        .selector-header {
+            text-align: center;
+            max-height: 120px;
+            padding: 1rem 1rem 0.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .selector-header .arabic-title {
+            font-family: 'Scheherazade New', 'Amiri', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: #d4af37;
+            text-shadow: 0 2px 15px rgba(212, 175, 55, 0.3);
+            direction: rtl;
+            line-height: 1.2;
+        }
+
+        .divider-dot {
+            color: #d4af37;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .selector-header h1 {
+            font-family: 'Amiri', serif;
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: #e8d5a3;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+
+        .selector-header .subtitle {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.45);
+            font-style: italic;
+            margin-top: 0.4rem;
+        }
+
+        .header-line {
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+            margin-top: 0.5rem;
+        }
+
+        /* Para Grid */
+        .para-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        @media (min-width: 1000px) {
+            .para-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        .para-card {
+            position: relative;
+            background: linear-gradient(145deg, rgba(26, 39, 68, 0.9) 0%, rgba(13, 31, 60, 0.95) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .para-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .para-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(212, 175, 55, 0.1);
+        }
+
+        .para-card:hover::before {
+            opacity: 1;
+        }
+
+        .para-number {
+            font-family: 'Scheherazade New', serif;
+            font-size: 1rem;
+            color: #d4af37;
+            line-height: 1;
+            margin-bottom: 0.4rem;
+            text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .para-arabic {
+            font-family: 'Scheherazade New', 'Amiri', serif;
+            font-size: 1.7rem;
+            color: #e8d5a3;
+            direction: rtl;
+            margin-bottom: 0.3rem;
+            line-height: 1.3;
+        }
+
+        .para-name {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Special cards (Intro & Index) */
+        .para-card.special {
+            background: linear-gradient(145deg, rgba(45, 35, 25, 0.9) 0%, rgba(30, 25, 20, 0.95) 100%);
+            border-color: rgba(180, 150, 100, 0.3);
+        }
+
+        .para-card.special .para-number {
+            font-size: 1.8rem;
+            color: #c9a962;
+        }
+
+        /* ===== FLIPBOOK VIEW ===== */
+        #flipbook-view {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2744 50%, #0d1f3c 100%);
+        }
+
+        .flipbook-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
+            z-index: 10;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50px;
+            color: #d4af37;
+            font-family: 'Amiri', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(212, 175, 55, 0.25);
+            border-color: rgba(212, 175, 55, 0.5);
+            transform: translateX(-5px);
+        }
+
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .current-para-title {
+            font-family: 'Scheherazade New', serif;
+            font-size: 1.5rem;
+            color: #d4af37;
+            text-align: center;
+        }
+
+        .header-spacer {
+            width: 120px;
+        }
+
+        #flipbook-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #d4af37;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(212, 175, 55, 0.2);
+            border-top-color: #d4af37;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Fullscreen Button */
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37 0%, #b8962f 100%);
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .fullscreen-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(212, 175, 55, 0.6);
+        }
+
+        .fullscreen-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: #1a1a2e;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .para-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+            }
+
+            .para-card {
+                padding: 1rem 0.75rem;
+            }
+
+            .para-number {
+                font-size: 2rem;
+            }
+
+            .flipbook-header {
+                padding: 0.75rem 1rem;
+            }
+
+            .back-btn span {
+                display: none;
+            }
+
+            .current-para-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            #para-selector {
+                /* padding: 0 .25rem 2rem; */
+            }
+
+            .para-grid {
+                grid-template-columns: 1fr;
+                gap: 0.6rem;
+                max-width: 100%;
+                padding: 0 0.5rem;
+            }
+
+            .para-card {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                padding: 0.6rem;
+                padding-left: 0.2rem;
+                gap: 0.8rem;
+                text-align: left;
+                border-radius: 10px;
+            }
+
+            .para-card:hover {
+                transform: translateY(-2px);
+            }
+
+            .para-number {
+                font-size: 1.3rem;
+                min-width: 2rem;
+                margin-bottom: 0;
+                text-align: center;
+            }
+
+            .para-content {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                flex: 1;
+                gap: 0.5rem;
+            }
+
+            .para-arabic {
+                font-size: 1.4rem;
+                order: 2;
+                margin-bottom: 0;
+            }
+
+            .para-name {
+                font-size: 0.8rem;
+                order: 1;
+            }
+
+            .selector-header .header-top {
+                gap: 0.8rem;
+            }
+
+            .selector-header .arabic-title {
+                font-size: 1.4rem;
+            }
+
+            .selector-header h1 {
+                font-size: 0.9rem;
+            }
+
+            .selector-header .subtitle {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== PARA SELECTOR VIEW ===== -->
+    <div id="para-selector">
+        <header class="selector-header">
+            <div class="header-top">
+                <h1>AASAN QURAN</h1>
+                <span class="divider-dot">✦</span>
+                <p class="arabic-title">آسان قرآن</p>
+            </div>
+            <p class="subtitle">Al Qalam Publication — Select a Para to begin reading</p>
+            <div class="header-line"></div>
+        </header>
+
+        <div class="para-grid" id="para-grid">
+            <!-- Cards will be generated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- ===== FLIPBOOK VIEW ===== -->
+    <div id="flipbook-view">
+        <header class="flipbook-header">
+            <button class="back-btn" onclick="showParaSelector()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                </svg>
+                <span>All Paras</span>
+            </button>
+            <div class="current-para-title" id="current-para-title"></div>
+            <div class="header-spacer"></div>
+        </header>
+
+        <div id="flipbook-container">
+            <div class="loading-overlay" id="pdf-loading">
+                <div class="loading-spinner"></div>
+                <p style="margin-top: 1.5rem; font-family: 'Amiri', serif;">Preparing PDF...</p>
+            </div>
+            <div id="pdfflipbook" webgl="true" backgroundcolor="transparent" direction="2" pagemode="2"
+                singlepagemode="0" style="display: none;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen Button -->
+    <button class="fullscreen-btn" id="fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">
+        <svg viewBox="0 0 24 24" id="fullscreen-icon">
+            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+        </svg>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="dflip/js/libs/jquery.min.js"></script>
+    <script src="dflip/js/dflip.min.js"></script>
+
+    <script>
+        // Para Data with Arabic names
+        const paraData = [
+            { num: 0, file: 'Aasan Quran Para-00 Intro.pdf', arabic: 'مقدمہ', name: 'Introduction', special: true },
+            { num: 1, file: 'Aasan Quran Para-01.pdf', arabic: 'الٓمٓ', name: 'Alif Lam Meem' },
+            { num: 2, file: 'Aasan Quran Para-02.pdf', arabic: 'سَيَقُولُ', name: 'Sayaqool' },
+            { num: 3, file: 'Aasan Quran Para-03.pdf', arabic: 'تِلْكَ الرُّسُلُ', name: 'Tilkar Rusul' },
+            { num: 4, file: 'Aasan Quran Para-04.pdf', arabic: 'لَنْ تَنَالُوا', name: 'Lan Tana Loo' },
+            { num: 5, file: 'Aasan Quran Para-05.pdf', arabic: 'وَالْمُحْصَنَاتُ', name: 'Wal Muhsanat' },
+            { num: 6, file: 'Aasan Quran Para-06.pdf', arabic: 'لَا يُحِبُّ اللَّهُ', name: 'La Yuhibbullah' },
+            { num: 7, file: 'Aasan Quran Para-07.pdf', arabic: 'وَإِذَا سَمِعُوا', name: 'Wa Iza Samiu' },
+            { num: 8, file: 'Aasan Quran Para-08.pdf', arabic: 'وَلَوْ أَنَّنَا', name: 'Wa Lau Annana' },
+            { num: 9, file: 'Aasan Quran Para-09.pdf', arabic: 'قَالَ الْمَلَأُ', name: 'Qalal Malau' },
+            { num: 10, file: 'Aasan Quran Para-10.pdf', arabic: 'وَاعْلَمُوا', name: 'Wa A\'lamu' },
+            { num: 11, file: 'Aasan Quran Para-11.pdf', arabic: 'يَعْتَذِرُونَ', name: 'Ya\'taziroon' },
+            { num: 12, file: 'Aasan Quran Para-12.pdf', arabic: 'وَمَا مِنْ دَابَّةٍ', name: 'Wa Ma Min Dabbah' },
+            { num: 13, file: 'Aasan Quran Para-13.pdf', arabic: 'وَمَا أُبَرِّئُ', name: 'Wa Ma Ubarriu' },
+            { num: 14, file: 'Aasan Quran Para-14.pdf', arabic: 'رُبَمَا', name: 'Rubama' },
+            { num: 15, file: 'Aasan Quran Para-15.pdf', arabic: 'سُبْحَانَ الَّذِي', name: 'Subhanallazi' },
+            { num: 16, file: 'Aasan Quran Para-16.pdf', arabic: 'قَالَ أَلَمْ', name: 'Qala Alam' },
+            { num: 17, file: 'Aasan Quran Para-17.pdf', arabic: 'اقْتَرَبَ', name: 'Iqtaraba' },
+            { num: 18, file: 'Aasan Quran Para-18.pdf', arabic: 'قَدْ أَفْلَحَ', name: 'Qad Aflaha' },
+            { num: 19, file: 'Aasan Quran Para-19.pdf', arabic: 'وَقَالَ الَّذِينَ', name: 'Wa Qalallazina' },
+            { num: 20, file: 'Aasan Quran Para-20.pdf', arabic: 'أَمَّنْ خَلَقَ', name: 'A\'man Khalaq' },
+            { num: 21, file: 'Aasan Quran Para-21.pdf', arabic: 'اتْلُ مَا أُوحِيَ', name: 'Utlu Ma Uhiya' },
+            { num: 22, file: 'Aasan Quran Para-22.pdf', arabic: 'وَمَنْ يَقْنُتْ', name: 'Wa Man Yaqnut' },
+            { num: 23, file: 'Aasan Quran Para-23.pdf', arabic: 'وَمَا لِيَ', name: 'Wa Mali' },
+            { num: 24, file: 'Aasan Quran Para-24.pdf', arabic: 'فَمَنْ أَظْلَمُ', name: 'Faman Azlam' },
+            { num: 25, file: 'Aasan Quran Para-25.pdf', arabic: 'إِلَيْهِ يُرَدُّ', name: 'Ilaihi Yuraddu' },
+            { num: 26, file: 'Aasan Quran Para-26.pdf', arabic: 'حٰمٓ', name: 'Ha Meem' },
+            { num: 27, file: 'Aasan Quran Para-27.pdf', arabic: 'قَالَ فَمَا خَطْبُكُمْ', name: 'Qala Fama Khatbukum' },
+            { num: 28, file: 'Aasan Quran Para-28.pdf', arabic: 'قَدْ سَمِعَ اللَّهُ', name: 'Qad Sami Allah' },
+            { num: 29, file: 'Aasan Quran Para-29.pdf', arabic: 'تَبَارَكَ الَّذِي', name: 'Tabarakallazi' },
+            { num: 30, file: 'Aasan Quran Para-30.pdf', arabic: 'عَمَّ', name: 'Amma' },
+            { num: 31, file: 'Aasan Quran Para-31 Index.pdf', arabic: 'فہرست', name: 'Index', special: true }
+        ];
+
+        // Generate Para Cards
+        function generateParaCards() {
+            const grid = document.getElementById('para-grid');
+
+            paraData.forEach(para => {
+                const card = document.createElement('div');
+                card.className = `para-card${para.special ? ' special' : ''}`;
+                card.onclick = () => openPara(para);
+
+                const displayNum = para.special ? (para.num === 0 ? '📖' : '📋') : para.num;
+
+                card.innerHTML = `
+                    <div class="para-number">${displayNum}</div>
+                    <div class="para-content">
+                        <div class="para-arabic">${para.arabic}</div>
+                        <div class="para-name">${para.name}</div>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Current para being viewed
+        let currentPara = null;
+        let currentFlipbook = null;
+
+        // Open a specific Para
+        async function openPara(para) {
+            currentPara = para;
+
+            // Update title
+            const titleText = para.special
+                ? para.name
+                : `Para ${para.num} - ${para.arabic}`;
+            document.getElementById('current-para-title').textContent = titleText;
+
+            // Show flipbook view
+            document.getElementById('para-selector').style.display = 'none';
+            document.getElementById('flipbook-view').style.display = 'block';
+            document.getElementById('fullscreen-btn').style.display = 'flex';
+
+            // Reset flipbook container
+            const flipbookElement = document.getElementById('pdfflipbook');
+            flipbookElement.style.display = 'none';
+            flipbookElement.classList.remove('_df_book');
+            flipbookElement.removeAttribute('source');
+            document.getElementById('pdf-loading').style.display = 'flex';
+
+            // Destroy previous flipbook if exists
+            if (currentFlipbook && typeof currentFlipbook.dispose === 'function') {
+                currentFlipbook.dispose();
+            }
+
+            try {
+                const pdfPath = `Aasan-Quran/${para.file}`;
+                const modifiedPdfUrl = await preparePdfWithBlankPage(pdfPath);
+
+                // Set source and initialize
+                flipbookElement.setAttribute('source', modifiedPdfUrl);
+                flipbookElement.classList.add('_df_book');
+
+                document.getElementById('pdf-loading').style.display = 'none';
+                flipbookElement.style.display = 'block';
+
+                if (typeof DFLIP !== 'undefined') {
+                    DFLIP.parseBooks();
+                }
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                document.getElementById('pdf-loading').innerHTML =
+                    '<p style="color: #ff6b6b;">Error loading PDF. Please try again.</p>';
+            }
+        }
+
+        // Show Para Selector
+        function showParaSelector() {
+            document.getElementById('flipbook-view').style.display = 'none';
+            document.getElementById('para-selector').style.display = 'block';
+            document.getElementById('fullscreen-btn').style.display = 'none';
+
+            // Exit fullscreen if active
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+        }
+
+        // PDF Processing - Add blank cream page
+        async function preparePdfWithBlankPage(originalPdfUrl) {
+            const { PDFDocument, rgb } = PDFLib;
+
+            const originalPdfBytes = await fetch(originalPdfUrl).then(res => res.arrayBuffer());
+            const originalPdf = await PDFDocument.load(originalPdfBytes);
+            const newPdf = await PDFDocument.create();
+
+            const firstPage = originalPdf.getPages()[0];
+            const { width, height } = firstPage.getSize();
+
+            // Add cream blank page
+            const blankPage = newPdf.addPage([width, height]);
+            blankPage.drawRectangle({
+                x: 0, y: 0,
+                width: width, height: height,
+                color: rgb(0.98, 0.97, 0.92)
+            });
+
+            // Copy all original pages
+            const copiedPages = await newPdf.copyPages(originalPdf, originalPdf.getPageIndices());
+            copiedPages.forEach(page => newPdf.addPage(page));
+
+            const newPdfBytes = await newPdf.save();
+            const blob = new Blob([newPdfBytes], { type: 'application/pdf' });
+            return URL.createObjectURL(blob);
+        }
+
+        // Flipbook Configuration
+        var defined_defined = true;
+        var option_pdfflipbook = {
+            webgl: true,
+            height: '100%',
+            autoEnableOutline: false,
+            autoEnableThumbnail: false,
+            overwritePDFOutline: true,
+            pageMode: 2,
+            singlePageMode: 0,
+            controlsPosition: 'bottom',
+            direction: 2,
+            openPage: 2,
+            cover: false,
+            duration: 800,
+            hard: 'none',
+            backgroundColor: 'transparent',
+            paddingTop: 80,
+            paddingBottom: 20,
+            paddingLeft: 20,
+            paddingRight: 20,
+            enableDownload: true,
+            enablePrint: false,
+            scrollWheel: true,
+            zoomRatio: 1.5,
+            soundEnable: true,
+            enableAnnotation: false
+        };
+
+        // Fullscreen Toggle
+        function toggleFullscreen() {
+            const container = document.getElementById('flipbook-view');
+
+            if (!document.fullscreenElement) {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
+        }
+
+        // Update fullscreen icon and hide header in fullscreen
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+        function handleFullscreenChange() {
+            const icon = document.getElementById('fullscreen-icon');
+            const header = document.querySelector('.flipbook-header');
+            const container = document.getElementById('flipbook-container');
+
+            if (document.fullscreenElement) {
+                // Entering fullscreen - hide header
+                icon.innerHTML = '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>';
+                if (header) header.style.display = 'none';
+            } else {
+                // Exiting fullscreen - show header
+                icon.innerHTML = '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>';
+                if (header) header.style.display = 'flex';
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', generateParaCards);
+    </script>
+</body>
+
+</html>
