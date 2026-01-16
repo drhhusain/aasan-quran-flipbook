@@ -470,7 +470,6 @@
     </button>
 
     <!-- Scripts -->
-    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="dflip/js/libs/jquery.min.js"></script>
     <script src="dflip/js/dflip.min.js"></script>
 
@@ -539,7 +538,7 @@
         let currentFlipbook = null;
 
         // Open a specific Para
-        async function openPara(para) {
+        function openPara(para) {
             currentPara = para;
 
             // Update title
@@ -553,8 +552,8 @@
             document.getElementById('flipbook-view').style.display = 'block';
             document.getElementById('fullscreen-btn').style.display = 'flex';
 
-            // Show loading
-            document.getElementById('pdf-loading').style.display = 'flex';
+            // Hide loading initially - dflip will show its own loading indicator
+            document.getElementById('pdf-loading').style.display = 'none';
 
             // Destroy previous flipbook completely
             const flipbookContainer = document.getElementById('flipbook-container');
@@ -583,26 +582,15 @@
             newFlipbook.setAttribute('direction', '2');
             newFlipbook.setAttribute('pagemode', '2');
             newFlipbook.setAttribute('singlepagemode', '0');
-            newFlipbook.style.display = 'none';
             flipbookContainer.appendChild(newFlipbook);
 
-            try {
-                const pdfPath = `Aasan-Quran/${para.file}`;
-                const modifiedPdfUrl = await preparePdfWithBlankPage(pdfPath);
+            // Set source directly - allows PDF.js to use byte-range streaming
+            const pdfPath = `Aasan-Quran/${para.file}`;
+            newFlipbook.setAttribute('source', pdfPath);
+            newFlipbook.style.display = 'block';
 
-                // Set source and initialize
-                newFlipbook.setAttribute('source', modifiedPdfUrl);
-
-                document.getElementById('pdf-loading').style.display = 'none';
-                newFlipbook.style.display = 'block';
-
-                if (typeof DFLIP !== 'undefined') {
-                    DFLIP.parseBooks();
-                }
-            } catch (error) {
-                console.error('Error loading PDF:', error);
-                document.getElementById('pdf-loading').innerHTML =
-                    '<p style="color: #ff6b6b;">Error loading PDF. Please try again.</p>';
+            if (typeof DFLIP !== 'undefined') {
+                DFLIP.parseBooks();
             }
         }
 
@@ -616,34 +604,6 @@
             if (document.fullscreenElement) {
                 document.exitFullscreen();
             }
-        }
-
-        // PDF Processing - Add blank cream page
-        async function preparePdfWithBlankPage(originalPdfUrl) {
-            const { PDFDocument, rgb } = PDFLib;
-
-            const originalPdfBytes = await fetch(originalPdfUrl).then(res => res.arrayBuffer());
-            const originalPdf = await PDFDocument.load(originalPdfBytes);
-            const newPdf = await PDFDocument.create();
-
-            const firstPage = originalPdf.getPages()[0];
-            const { width, height } = firstPage.getSize();
-
-            // Add cream blank page
-            const blankPage = newPdf.addPage([width, height]);
-            blankPage.drawRectangle({
-                x: 0, y: 0,
-                width: width, height: height,
-                color: rgb(0.98, 0.97, 0.92)
-            });
-
-            // Copy all original pages
-            const copiedPages = await newPdf.copyPages(originalPdf, originalPdf.getPageIndices());
-            copiedPages.forEach(page => newPdf.addPage(page));
-
-            const newPdfBytes = await newPdf.save();
-            const blob = new Blob([newPdfBytes], { type: 'application/pdf' });
-            return URL.createObjectURL(blob);
         }
 
         // Flipbook Configuration
@@ -672,7 +632,10 @@
             scrollWheel: true,
             zoomRatio: 1.5,
             soundEnable: true,
-            enableAnnotation: false
+            enableAnnotation: false,
+            rangeChunkSize: 65536,
+            disableRange: false,
+            disableStream: false
         };
 
         // Fullscreen Toggle
