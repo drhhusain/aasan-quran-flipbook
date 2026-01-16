@@ -473,6 +473,20 @@
     <!-- Scripts -->
     <script src="dflip/js/libs/jquery.min.js"></script>
     <script src="dflip/js/dflip.min.js"></script>
+    <script>
+        // Override outdated compatibility.js settings that disable range requests
+        // These were workarounds for Chrome 39-40 (2014) and old Safari/iOS bugs
+        if (typeof PDFJS !== 'undefined') {
+            PDFJS.disableRange = false;
+            PDFJS.disableStream = false;
+            PDFJS.rangeChunkSize = 65536;
+        }
+        // Also set on pdfjsLib if using newer PDF.js
+        if (typeof pdfjsLib !== 'undefined' && pdfjsLib.GlobalWorkerOptions) {
+            pdfjsLib.disableRange = false;
+            pdfjsLib.disableStream = false;
+        }
+    </script>
 
     <script>
         // Para Data with Arabic names
@@ -584,6 +598,12 @@
             newFlipbook.setAttribute('pagemode', '2');
             newFlipbook.setAttribute('singlepagemode', '0');
             flipbookContainer.appendChild(newFlipbook);
+
+            // Ensure range requests are enabled before loading
+            if (typeof PDFJS !== 'undefined') {
+                PDFJS.disableRange = false;
+                PDFJS.disableStream = false;
+            }
 
             // Set source directly - allows PDF.js to use byte-range streaming
             const pdfPath = `Aasan-Quran/${para.file}`;

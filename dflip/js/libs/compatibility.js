@@ -478,10 +478,12 @@ if (typeof PDFJS === 'undefined') {
   // since Firefox/Fennec works as expected.
 
   // Range requests are broken in Chrome 39 and 40, https://crbug.com/442318
-  if (isSafari || isAndroidPre3 || isChromeWithRangeBug || isIOS) {
-    PDFJS.disableRange = true;
-    PDFJS.disableStream = true;
-  }
+  // NOTE: These workarounds are from 2014-2015 and no longer needed for modern browsers.
+  // Modern Safari, iOS, and Chrome fully support range requests.
+  // if (isSafari || isAndroidPre3 || isChromeWithRangeBug || isIOS) {
+  //   PDFJS.disableRange = true;
+  //   PDFJS.disableStream = true;
+  // }
 })();
 
 // Check if the browser supports manipulation of the history.
