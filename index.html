@@ -64,6 +64,41 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            position: relative;
+        }
+
+        /* Close button for iframe embed */
+        .close-iframe-btn {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 100;
+        }
+
+        .close-iframe-btn:hover {
+            background: rgba(255, 80, 80, 0.3);
+            transform: scale(1.1);
+        }
+
+        .close-iframe-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #e8d5a3;
+        }
+
+        /* Show close button only when in iframe */
+        body.in-iframe .close-iframe-btn {
+            display: flex;
         }
 
         .header-top {
@@ -425,6 +460,12 @@
     <!-- ===== PARA SELECTOR VIEW ===== -->
     <div id="para-selector">
         <header class="selector-header">
+            <button class="close-iframe-btn" onclick="closeIframe()" title="Close">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                </svg>
+            </button>
             <div class="header-top">
                 <h1>AASAN QURAN</h1>
                 <span class="divider-dot">✦</span>
@@ -489,6 +530,25 @@
     </script>
 
     <script>
+        // Detect if running inside an iframe and add class to body
+        (function () {
+            try {
+                if (window.self !== window.top) {
+                    document.body.classList.add('in-iframe');
+                }
+            } catch (e) {
+                // Cross-origin iframe - assume we're in iframe
+                document.body.classList.add('in-iframe');
+            }
+        })();
+
+        // Close iframe - sends message to parent window
+        function closeIframe() {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ action: 'closeQuranViewer' }, '*');
+            }
+        }
+
         // Para Data with Arabic names
         const paraData = [
             { num: 0, file: 'Aasan Quran Para-00 Intro.pdf', arabic: 'مقدمہ', name: 'Introduction', special: true },
